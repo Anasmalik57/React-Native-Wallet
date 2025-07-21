@@ -103,7 +103,7 @@ export default function SignUpScreen() {
       style={{ flex: 1 }}
       contentContainerStyle={{ flexGrow: 1 }}
       enableOnAndroid={true}
-      enableAutomaticScroll={true} 
+      enableAutomaticScroll={true}
       extraScrollHeight={100}
     >
       <View style={styles.container}>

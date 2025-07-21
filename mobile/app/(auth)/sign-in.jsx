@@ -2,6 +2,10 @@ import { useSignIn } from "@clerk/clerk-expo";
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { styles } from "../../assets/styles/auth.styles";
+import { COLORS } from "../../constants/Colors";
+import { Image } from "expo-image";
 
 export default function Page() {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -39,28 +43,40 @@ export default function Page() {
   };
 
   return (
-    <View>
-      <Text>Sign in</Text>
-      <TextInput
-        autoCapitalize="none"
-        value={emailAddress}
-        placeholder="Enter email"
-        onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
-      />
-      <TextInput
-        value={password}
-        placeholder="Enter password"
-        secureTextEntry={true}
-        onChangeText={(password) => setPassword(password)}
-      />
-      <TouchableOpacity onPress={onSignInPress}>
-        <Text>Continue</Text>
-      </TouchableOpacity>
-      <View style={{ display: "flex", flexDirection: "row", gap: 3 }}>
-        <Link href="/sign-up">
-          <Text>Sign up</Text>
-        </Link>
+    <KeyboardAwareScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={{ flexGrow: 1 }}
+      enableOnAndroid={true}
+      enableAutomaticScroll={true}
+      extraScrollHeight={100}
+    >
+      <View style={styles.container}>
+        <Image
+          source={require("../../assets/images/revenue-i4.png") }
+          style={styles.illustration}
+        />
+        <Text style={styles.title}>Sign in</Text>
+        <TextInput
+          autoCapitalize="none"
+          value={emailAddress}
+          placeholder="Enter email"
+          onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
+        />
+        <TextInput
+          value={password}
+          placeholder="Enter password"
+          secureTextEntry={true}
+          onChangeText={(password) => setPassword(password)}
+        />
+        <TouchableOpacity onPress={onSignInPress}>
+          <Text>Continue</Text>
+        </TouchableOpacity>
+        <View style={{ display: "flex", flexDirection: "row", gap: 3 }}>
+          <Link href="/sign-up">
+            <Text>Sign up</Text>
+          </Link>
+        </View>
       </View>
-    </View>
+    </KeyboardAwareScrollView>
   );
 }
