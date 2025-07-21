@@ -36,9 +36,19 @@ export default function SignUpScreen() {
       // and capture OTP code
       setPendingVerification(true);
     } catch (err) {
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
-      console.error(JSON.stringify(err, null, 2));
+      console.log("====================================");
+      console.log(err?.errors);
+      console.log("====================================");
+      if (err?.errors?.[0]?.code === "form_identifier_exists") {
+        setError("That email is already exists. Please try another one.");
+      } else if (err?.errors?.[0]?.code === "form_password_length_too_short") {
+        setError("Passwords must be 8 characters or more");
+      } else if (err?.errors?.[0]?.code === "too_many_requests") {
+        setError("Too many requests. Please try again in a bit");
+      } else {
+        setError("An error occured. Please try again.", err?.errors);
+      }
+      // console.error(JSON.stringify(err, null, 2));
     }
   };
 
