@@ -15,18 +15,19 @@ export default function Page() {
     loadData();
   }, [user?.id]);
 
-  console.log("====================================");
+  console.log("=====================================");
   console.log("userId 😃:===>", user.id);
-  console.log("====================================");
-  // setTimeout(() => {
-    console.log("Transactions: ==>", JSON.stringify(transactions, null, 2));
-    console.log("Summary: ==>", JSON.stringify(summary, null, 2));
-  // }, 2000)
+  console.log("=====================================");
+  console.log("Transactions: ==>", JSON.stringify(transactions, null, 2));
+  console.log("Summary: ==>", JSON.stringify(summary, null, 2));
 
   return (
     <View>
       <SignedIn>
         <Text>Hello {user?.emailAddresses[0].emailAddress}</Text>
+        <Text>Balance: {summary.balance}</Text>
+        <Text>Income: {summary.income}</Text>
+        <Text>Expenses: {summary.expenses}</Text>
         <SignOutButton />
       </SignedIn>
       <SignedOut>
