@@ -1,17 +1,27 @@
 import { SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
 import { Link, router } from "expo-router";
-import { Alert, FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  FlatList,
+  Image,
+  RefreshControl,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useTransactions } from "../../hooks/useTransaction";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SignOutButton } from "@/components/SignOutButton";
 import PageLoader from "../../components/PageLoader";
 import { styles } from "../../assets/styles/home.styles";
 import { Ionicons } from "@expo/vector-icons";
 import BalanceCard from "../../components/BalanceCard";
 import TransactionItem from "../../components/TransactionItem";
+import NoTransactionsFound from "../../components/NoTransactionsFound";
 
 export default function Page() {
   const { user } = useUser();
+  const [refreshing, setRefreshing] = useState(false);
 
   const { transactions, summary, isLoading, loadData, deleteTransaction } =
     useTransactions(user?.id);
@@ -19,6 +29,14 @@ export default function Page() {
   useEffect(() => {
     loadData();
   }, [user?.id]);
+
+  // ===================================
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await loadData()
+    setRefreshing(false)
+  };
+  // ===================================
 
   const handleDelete = (id) => {
     Alert.alert(
@@ -35,11 +53,7 @@ export default function Page() {
     );
   };
 
-  // console.log('====================================');
-  // console.log(JSON.stringify(user, null, 2));
-  // console.log('====================================');
-
-  if (isLoading) return <PageLoader />;
+  if (isLoading && !refreshing) return <PageLoader />;
 
   return (
     <View style={styles.container}>
@@ -89,6 +103,11 @@ export default function Page() {
         renderItem={({ item }) => (
           <TransactionItem item={item} onDelete={handleDelete} />
         )}
+        ListEmptyComponent={() => <NoTransactionsFound />}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </View>
   );

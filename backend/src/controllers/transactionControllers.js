@@ -6,9 +6,9 @@ export async function getTransactionsByUserId(req, res) {
     const fetched_transactions = await sql`
    SELECT * FROM transactions WHERE user_id = ${userId} ORDER BY created_at DESC
    `;
-    console.log("🌟====================================🌟");
-    console.log(fetched_transactions);
-    console.log("🛑====================================🛑");
+    // console.log("🌟====================================🌟");
+    // console.log(fetched_transactions);
+    // console.log("🛑====================================🛑");
     res.status(200).json(fetched_transactions);
   } catch (error) {
     console.log("Error in getting the transactions ===> ", error);

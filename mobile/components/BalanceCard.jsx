@@ -9,7 +9,7 @@ const BalanceCard = ({ summary }) => {
     <View style={styles.balanceCard}>
       <Text style={styles.balanceTitle}>Total Balance</Text>
       <Text style={styles.balanceAmount}>
-        {parseFloat(summary.balance).toFixed(2)}
+        ₹{parseFloat(summary.balance).toFixed(2)}
       </Text>
       <View style={styles.balanceStats}>
         <View style={styles.balanceStatItem}>
