@@ -1,6 +1,6 @@
 import { SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
 import { Link, router } from "expo-router";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Alert, FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { useTransactions } from "../../hooks/useTransaction";
 import { useEffect } from "react";
 import { SignOutButton } from "@/components/SignOutButton";
@@ -8,16 +8,32 @@ import PageLoader from "../../components/PageLoader";
 import { styles } from "../../assets/styles/home.styles";
 import { Ionicons } from "@expo/vector-icons";
 import BalanceCard from "../../components/BalanceCard";
+import TransactionItem from "../../components/TransactionItem";
 
 export default function Page() {
   const { user } = useUser();
 
-  const { transactions, summary, isLoading, loadData, deleteTransactions } =
+  const { transactions, summary, isLoading, loadData, deleteTransaction } =
     useTransactions(user?.id);
 
   useEffect(() => {
     loadData();
   }, [user?.id]);
+
+  const handleDelete = (id) => {
+    Alert.alert(
+      "Delete Transaction",
+      "Are yousure you want to delete this transaction",
+      [
+        { text: "cancel", style: "cancel" },
+        {
+          text: "delete",
+          style: "destructive",
+          onPress: () => deleteTransaction(id),
+        },
+      ]
+    );
+  };
 
   // console.log('====================================');
   // console.log(JSON.stringify(user, null, 2));
@@ -27,6 +43,7 @@ export default function Page() {
 
   return (
     <View style={styles.container}>
+      {/* Content */}
       <View style={styles.content}>
         {/* Header */}
         <View style={styles.header}>
@@ -56,13 +73,23 @@ export default function Page() {
             <SignOutButton />
           </View>
         </View>
-      </View>
-      {/* Balance Card */}
-      <BalanceCard summary={summary} />
 
-      <View style={styles.transactionsHeaderContainer}>
-        <Text style={styles.sectionTitle}>Recent Transactions</Text>
+        {/* Balance Card */}
+        <BalanceCard summary={summary} />
+
+        <View style={styles.transactionsHeaderContainer}>
+          <Text style={styles.sectionTitle}>Recent Transactions</Text>
+        </View>
       </View>
+      {/* FlatList Component */}
+      <FlatList
+        style={styles.transactionsList}
+        contentContainerStyle={styles.transactionsListContent}
+        data={transactions}
+        renderItem={({ item }) => (
+          <TransactionItem item={item} onDelete={handleDelete} />
+        )}
+      />
     </View>
   );
 }
